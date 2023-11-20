@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer with Widget</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 0;
+            background-color: #1e1e1e;
+            color: #fff;
+            padding-top: 40px;
+        }
+
+        #iphone {
+            width: 375px;
+            height: 812px;
+            margin: 0 auto;
+            background-color: #1e1e1e;
+            border-radius: 30px;
+            border: 8px solid #3d3d3d;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #countdown {
+            font-size: 24px;
+            margin-top: 20px;
+            color: #fff;
+        }
+
+        #timer {
+            font-size: 36px;
+            color: #fff;
+        }
+
+        #widget {
+            display: none;
+            padding: 20px;
+            background-color: #2c2c2c;
+            border: 1px solid #4c4c4c;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        #buttons {
+            margin-top: 20px;
+        }
+
+        button {
+            font-size: 16px;
+            padding: 10px;
+            margin: 5px;
+            background-color: #4c4c4c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #durationInput {
+            font-size: 16px;
+            padding: 10px;
+            background-color: #4c4c4c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="iphone">
+        <div id="countdown">Countdown: <span id="timer"></span></div>
+        <div id="widget">
+            <!-- Your widget content goes here -->
+            <h2>Time's up!</h2>
+
+            <p>Manage your expense.</p>
+            <img src="WhatsApp Image 2023-11-20 at 7.41.20 AM.jpeg" alt="">
+        </div>
+
+        <div id="buttons">
+            <label for="durationInput">Set Timer:</label>
+            <input type="number" id="durationInput" placeholder="Enter duration in seconds">
+            <button onclick="setTimer()">Set Timer</button>
+            <button onclick="stopTimer()">Stop Timer</button>
+            <button onclick="restartTimer()">Restart Timer</button>
+            <button onclick="addNote()">Add Note</button>
+        </div>
+    </div>
+
+    <script>
+        let timerInterval;
+
+        function startCountdown(durationInSeconds) {
+            const timerElement = document.getElementById('timer');
+            const widgetElement = document.getElementById('widget');
+
+            let timeLeft = durationInSeconds;
+
+            function updateTimer() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+
+                timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                if (timeLeft <= 0) {
+                    // Show the widget when the timer reaches zero
+                    widgetElement.style.display = 'block';
+                    clearInterval(timerInterval);
+                } else {
+                    timeLeft--;
+                }
+            }
+
+            // Clear any existing interval before starting a new one
+            clearInterval(timerInterval);
+
+            // Initial call to start the countdown
+            updateTimer();
+
+            // Set a new interval for updating the timer
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function setTimer() {
+            const durationInput = document.getElementById('durationInput');
+            const durationInSeconds = parseInt(durationInput.value, 10);
+
+            // Validate if the input is a positive number
+            if (!isNaN(durationInSeconds) && durationInSeconds > 0) {
+                // Stop the existing timer before setting a new one
+                stopTimer();
+                startCountdown(durationInSeconds);
+            } else {
+                alert('Please enter a valid positive number for the duration.');
+            }
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function restartTimer() {
+            // Restart the timer with the original duration
+            const originalDuration = 300; // 5 minutes
+            startCountdown(originalDuration);
+        }
+
+        function addNote() {
+            const note = prompt('Add a note to the timer:');
+            // Do something with the note, e.g., display it in the widget
+            const widgetElement = document.getElementById('widget');
+            widgetElement.innerHTML += `<p>Note: ${note}</p>`;
+        }
+
+        // Start the initial countdown with a duration of 5 minutes (300 seconds)
+        startCountdown();
+    </script>
+</body>
+</html>
